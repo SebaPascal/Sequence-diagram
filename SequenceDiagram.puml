@@ -1,0 +1,60 @@
+@startuml 
+
+
+Me->ATM : Insert Card
+Activate ATM
+ATM->BankServer : Verify Card
+Activate BankServer
+
+
+Alt if card is valid
+
+    BankServer-->ATM : Card Ok
+    ATM->Me : Request a PIN
+
+else If card isnt valid
+
+    BankServer-->ATM : Card invalid
+    ATM->Me : Eject Card
+end
+
+Me-->ATM : Pin entered
+ATM->BankServer : Verify PIN
+
+alt If PIN is valid
+
+    BankServer-->ATM : PIN ok
+    ATM->Me : Request amount
+
+Else if PIN is invalid
+
+    BankServer-->ATM : PIN invalid
+    ATM->Me : Eject Card
+
+end
+
+Me-->ATM : Amount entered
+ATM->BankServer : Start transaction
+BankServer->BankAccount : sufficient founds?
+Activate BankAccount
+
+Alt if found are sufficient
+
+    BankAccount-->BankServer : Founds OK
+    BankServer->BankAccount : Withdraw Amount
+    BankAccount-->BankServer : Withdraw Succesful
+    BankServer->ATM : Transaction Succesful
+    ATM->Me : Dispense Cash
+
+Else if founds are not sufficient
+
+    BankAccount-->BankServer : Insufficient founds
+    BankServer->ATM : transaction Unsuccesful
+    ATM->Me : Message insufficient founds
+
+end
+deactivate BankServer
+deactivate BankAccount
+
+ATM->Me : Eject Card
+@enduml 
