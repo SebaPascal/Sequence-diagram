@@ -1,4 +1,4 @@
-@startuml 
+@startuml name
 
 
 Me->ATM : Insert Card
